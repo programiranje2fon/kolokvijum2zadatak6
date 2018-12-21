@@ -10,6 +10,7 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
+import ispravka_koda.UpisivanjeUTXTFajl2Test;
 import prijemni.OrganizacijaPrijemnogIspitaTest;
 import prijemni.PrijemniIspitTest;
 import prijemni.gui.PrijemniGUITest;
@@ -26,6 +27,7 @@ public class PokreniTestove {
 		runTestsForClass(PrijemniIspitTest.class);
 		runTestsForClass(OrganizacijaPrijemnogIspitaTest.class);
 		runTestsForClass(PrijemniGUITest.class);
+		runTestsForClass(UpisivanjeUTXTFajl2Test.class);
 	}
 
 	/**
