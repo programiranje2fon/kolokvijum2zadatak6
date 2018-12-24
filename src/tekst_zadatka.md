@@ -26,6 +26,8 @@ Napraviti vizuelnu klasu **PrijemniGUI**u paketu **prijemni.gui** koja izgleda k
 - Kada se pritisne dugme "Ispisi", ispisuje se izveštaj u editoru koji sadrži samo nazive ustanova koje su 2018. godine imali veći broj prijavljenih nego 2017. godine (poziva se odgovarajuća metoda atributa **organizacijaPrijemnog**).
 
 ![Alt text](../images/prijemni.jpg?raw=true "Title")
+![Alt text](../images/prijemni-prosireno.jpg?raw=true "Title")
+
 
 # Zadatak 2 (ispravka koda)
 
