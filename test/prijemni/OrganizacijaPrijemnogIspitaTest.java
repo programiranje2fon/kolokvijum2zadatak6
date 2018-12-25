@@ -14,6 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import prijemni.izuzeci.PrijemniException;
 import test.TestUtil;
 
 public class OrganizacijaPrijemnogIspitaTest {
@@ -85,6 +86,11 @@ public class OrganizacijaPrijemnogIspitaTest {
 		
 		// brisemo fajl
 		new File(nazivFajla).delete();
+	}
+	
+	@Test (expected = PrijemniException.class)
+	public void metoda_ucitajIzFajlaUListu_bacaIzuzetak() {
+		instance.ucitajIzFajlaUListu("ne postoji fajl.txt");
 	}
 
 	@Test

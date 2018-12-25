@@ -3,20 +3,21 @@ package prijemni.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import prijemni.OrganizacijaPrijemnogIspita;
-
-import javax.swing.JTextArea;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.util.List;
-import java.awt.event.ActionEvent;
+import prijemni.izuzeci.PrijemniException;
 
 public class PrijemniGUI extends JFrame {
 
@@ -109,7 +110,11 @@ public class PrijemniGUI extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					String nazivFajla = textArea.getText();
 
-					organizacijaPrijemnog.ucitajIzFajlaUListu(nazivFajla);
+					try {
+						organizacijaPrijemnog.ucitajIzFajlaUListu(nazivFajla);
+					} catch (PrijemniException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			});
 			btnUcitaj.setBounds(16, 72, 117, 29);
@@ -125,12 +130,16 @@ public class PrijemniGUI extends JFrame {
 					String textEditora = "";
 
 					List<String> naziviUstanova = organizacijaPrijemnog.vratiUspesnePrijemneIspite();
-
-					for (String string : naziviUstanova) {
-						textEditora += string + "\n";
+					
+					if (!naziviUstanova.isEmpty()) {
+						for (String string : naziviUstanova) {
+							textEditora += string + "\n";
+						}
+	
+						textArea.setText(textEditora);
+					} else {
+						JOptionPane.showMessageDialog(null, "Nema ustanova koje ispunjavaju ovaj uslov.", "Greska", JOptionPane.ERROR_MESSAGE);
 					}
-
-					textArea.setText(textEditora);
 				}
 			});
 			btnIspisi.setBounds(164, 72, 117, 29);

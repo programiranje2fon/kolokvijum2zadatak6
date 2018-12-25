@@ -6,6 +6,8 @@ import java.io.ObjectInputStream;
 import java.util.LinkedList;
 import java.util.List;
 
+import prijemni.izuzeci.PrijemniException;
+
 public class OrganizacijaPrijemnogIspita {
 
 	private List<PrijemniIspit> ustanove = new LinkedList<>();
@@ -29,7 +31,7 @@ public class OrganizacijaPrijemnogIspita {
 			// zatvaramo stream
 			in.close();
 		} catch (Exception ex) {
-			System.out.println("Greska: " + ex.getMessage());
+			throw new PrijemniException("Greska prilikom ucitavanja iz fajla.");
 		}
 	}
 	
