@@ -1,0 +1,360 @@
+package prijemni.izuzeci;
+
+public class PrijemniException extends RuntimeException {
+
+	private static final long serialVersionUID = 1L;
+
+	public PrijemniException(String message) {
+		super(message);
+	}
+}
+
+package prijemni;
+
+import java.io.Serializable;
+
+import prijemni.izuzeci.PrijemniException;
+
+public class PrijemniIspit implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
+	private String nazivUstanove;
+	private int godinaUpisa;
+	private int brojMesta;
+	private int brojPrijavljenih;
+
+	public String getNazivUstanove() {
+		return nazivUstanove;
+	}
+
+	public void setNazivUstanove(String nazivUstanove) {
+		if (nazivUstanove == null || nazivUstanove.length() < 5) {
+			throw new PrijemniException("Naziv ustanove ne moze biti null ili kraci od pet znakova.");
+		}
+		this.nazivUstanove = nazivUstanove;
+	}
+
+	public int getGodinaUpisa() {
+		return godinaUpisa;
+	}
+
+	public void setGodinaUpisa(int godinaUpisa) {
+		if (godinaUpisa <= 0) {
+			throw new PrijemniException("Godina upisa mora biti veca od ili jednaka nula.");
+		}
+		this.godinaUpisa = godinaUpisa;
+	}
+
+	public int getBrojMesta() {
+		return brojMesta;
+	}
+
+	public void setBrojMesta(int brojMesta) {
+		if (brojMesta < 0) {
+			throw new PrijemniException("Broj mesta mora biti veci od ili jednak nula.");
+		}
+		this.brojMesta = brojMesta;
+	}
+
+	public int getBrojPrijavljenih() {
+		return brojPrijavljenih;
+	}
+
+	public void setBrojPrijavljenih(int brojPrijavljenih) {
+		if (brojPrijavljenih < 0) {
+			throw new PrijemniException("Broj prijavljenih mora biti veci od ili jednak nula.");
+		}
+		this.brojPrijavljenih = brojPrijavljenih;
+	}
+
+	@Override
+	public String toString() {
+		// cast-ujemo u double da bismo izbegli celobrojno deljenje
+		double odnos = (double) brojPrijavljenih / brojMesta;
+		
+		return "Naziv ustanove: " + nazivUstanove + ", godina upisa: " + godinaUpisa + ", broj mesta: " + brojMesta
+				+ ", broj prijavljenih: " + brojPrijavljenih + ", odnos prijavljenih i broja mesta je: " + odnos;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof PrijemniIspit))
+			return false;
+
+		PrijemniIspit pi = (PrijemniIspit) obj;
+
+		return this.nazivUstanove.equals(pi.nazivUstanove) && 
+				this.godinaUpisa == pi.godinaUpisa && 
+				this.brojMesta == pi.brojMesta && 
+				this.brojPrijavljenih == pi.brojPrijavljenih;
+	}
+	
+}
+
+
+package prijemni;
+
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.util.LinkedList;
+import java.util.List;
+
+import prijemni.izuzeci.PrijemniException;
+
+public class OrganizacijaPrijemnogIspita {
+
+	private List<PrijemniIspit> ustanove = new LinkedList<>();
+	
+	public void ucitajIzFajlaUListu(String nazivFajla) {
+		try {
+			ObjectInputStream in = new ObjectInputStream(
+										new BufferedInputStream(
+											new FileInputStream(nazivFajla)));
+			try {
+				while (true) {
+					PrijemniIspit p = (PrijemniIspit) (in.readObject());
+					
+					if (p.getBrojPrijavljenih() > 0) {
+						ustanove.add(p);
+					}
+				}
+			} catch (Exception ex) {
+			}
+
+			// zatvaramo stream
+			in.close();
+		} catch (Exception ex) {
+			throw new PrijemniException("Greska prilikom ucitavanja iz fajla.");
+		}
+	}
+	
+	public List<String> vratiUspesnePrijemneIspite() {
+		List<String> naziviUstanova = new LinkedList<>();
+		
+		for (PrijemniIspit prijemni1 : ustanove) {
+			
+			// ako se podaci o prijemnom ispitu odnose na godinu 2017
+			if (prijemni1.getGodinaUpisa() == 2017) {
+				
+				// pronalazimo da li postoje u listi podaci prijemnog ispita za istu ustanovu (ustanovu 
+				// sa istim nazivom) koji se odnose na 2018. godinu i proveravamo da li je broj prijavljenih
+				// u 2018. veci od broja prijavljenih u 2017.
+				for (PrijemniIspit prijemni2 : ustanove) {
+					if (prijemni1.getNazivUstanove().equals(prijemni2.getNazivUstanove()) &&
+							prijemni2.getGodinaUpisa() == 2018 &&
+							prijemni1.getBrojPrijavljenih() < prijemni2.getBrojPrijavljenih()) {
+						
+						naziviUstanova.add(prijemni1.getNazivUstanove());
+					}
+				}
+			}
+		}
+		
+		return naziviUstanova;
+	}
+}
+
+
+package prijemni.gui;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+import prijemni.OrganizacijaPrijemnogIspita;
+import prijemni.izuzeci.PrijemniException;
+
+public class PrijemniGUI extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	
+	private JPanel contentPane;
+	private JTextArea textArea;
+	private JPanel gornjiPanel;
+	private JLabel lblNazivFajla;
+	private JTextField jtfNazivFajla;
+	private JButton btnUcitaj;
+	private JButton btnIspisi;
+	private JButton btnIzadji;
+
+	private OrganizacijaPrijemnogIspita organizacijaPrijemnog = new OrganizacijaPrijemnogIspita();
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					PrijemniGUI frame = new PrijemniGUI();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public PrijemniGUI() {
+		setTitle("Prijemni ispit");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
+		setContentPane(contentPane);
+		contentPane.add(getTextArea(), BorderLayout.CENTER);
+		contentPane.add(getGornjiPanel(), BorderLayout.NORTH);
+	}
+
+	private JTextArea getTextArea() {
+		if (textArea == null) {
+			textArea = new JTextArea();
+		}
+		return textArea;
+	}
+
+	private JPanel getGornjiPanel() {
+		if (gornjiPanel == null) {
+			gornjiPanel = new JPanel();
+			gornjiPanel.setPreferredSize(new Dimension(1, 110));
+			gornjiPanel.setLayout(null);
+			gornjiPanel.add(getLblNazivFajla());
+			gornjiPanel.add(getJtfNazivFajla());
+			gornjiPanel.add(getBtnUcitaj());
+			gornjiPanel.add(getBtnIspisi());
+			gornjiPanel.add(getBtnIzadji());
+		}
+		return gornjiPanel;
+	}
+
+	private JLabel getLblNazivFajla() {
+		if (lblNazivFajla == null) {
+			lblNazivFajla = new JLabel("Naziv fajla:");
+			lblNazivFajla.setBounds(16, 6, 265, 16);
+		}
+		return lblNazivFajla;
+	}
+
+	private JTextField getJtfNazivFajla() {
+		if (jtfNazivFajla == null) {
+			jtfNazivFajla = new JTextField();
+			jtfNazivFajla.setBounds(16, 34, 265, 26);
+			jtfNazivFajla.setColumns(10);
+		}
+		return jtfNazivFajla;
+	}
+
+	private JButton getBtnUcitaj() {
+		if (btnUcitaj == null) {
+			btnUcitaj = new JButton("Ucitaj");
+			btnUcitaj.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					String nazivFajla = textArea.getText();
+
+					try {
+						organizacijaPrijemnog.ucitajIzFajlaUListu(nazivFajla);
+					} catch (PrijemniException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			});
+			btnUcitaj.setBounds(16, 72, 117, 29);
+		}
+		return btnUcitaj;
+	}
+
+	private JButton getBtnIspisi() {
+		if (btnIspisi == null) {
+			btnIspisi = new JButton("Ispisi");
+			btnIspisi.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					String textEditora = "";
+
+					List<String> naziviUstanova = organizacijaPrijemnog.vratiUspesnePrijemneIspite();
+					
+					if (!naziviUstanova.isEmpty()) {
+						for (String string : naziviUstanova) {
+							textEditora += string + "\n";
+						}
+	
+						textArea.setText(textEditora);
+					} else {
+						JOptionPane.showMessageDialog(null, "Nema ustanova koje ispunjavaju ovaj uslov.", "Greska", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			});
+			btnIspisi.setBounds(164, 72, 117, 29);
+		}
+		return btnIspisi;
+	}
+
+	private JButton getBtnIzadji() {
+		if (btnIzadji == null) {
+			btnIzadji = new JButton("Izadji");
+			btnIzadji.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					System.exit(0);
+				}
+			});
+			btnIzadji.setBounds(317, 72, 117, 29);
+		}
+		return btnIzadji;
+	}
+}
+
+
+package ispravka_koda;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+public class UpisivanjeUTXTFajl2 {
+
+	public static void upisiProsteBrojeve() {
+		try {
+			PrintWriter out = new PrintWriter(new FileWriter("brojevi2.txt"));
+
+			for (int i = 1; i <= 100; i++) {
+				int brojDelilaca = 0;
+				for (int j = 2; j < i; j++)
+					if (i % j == 0)
+						brojDelilaca++;
+
+				if (brojDelilaca == 0)
+					out.println(i);
+			}
+			
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+package ispravka_koda;
+
+public class ProbaUpisivanjeUTXTFajl2 {
+
+	public static void main(String[] args) {
+		UpisivanjeUTXTFajl2.upisiProsteBrojeve();
+	}
+}
