@@ -22,7 +22,7 @@ Napraviti javnu klasu **OrganizacijaPrijemnogIspita** u paketu **prijemni** koja
 Napraviti vizuelnu klasu **PrijemniGUI**u paketu **prijemni.gui** koja izgleda kao na slici. Naslov prozora bi trebalo da bude "Prijemni ispit", a centralni deo ekrana bi trebalo da sadrži editor za tekst. Kada se promeni dimenzija forme, trebalo bi da se ovaj centralni deo poveća/smanji, a da ostale komponente ostanu na istom mestu.
 - Klasa **PrijemniGUI** bi trebalo da sadrži privatni atribut **organizacijaPrijemnog** koji predstavlja objekat klase **OrganizacijaPrijemnogIspita**. Odmah inicijalizovati objekat.
 - Kada se pritisne dugme "Izadji", prekida se izvršavanje programa.
-- Kada se pritisne dugme "Ucitaj", iz editora se preuzima tekst koji sadrži naziv fajla i poziva se odgovarajuća metoda atributa **organizacijaPrijemnog** kojom se deserijalizuju podaci o prijemnim ispitima. U slučaju greške, ispitati poruku greške u JOptionPane dijalogu.
+- Kada se pritisne dugme "Ucitaj", iz polja za naziv fajla se preuzima tekst koji sadrži naziv fajla i poziva se odgovarajuća metoda atributa **organizacijaPrijemnog** kojom se deserijalizuju podaci o prijemnim ispitima. U slučaju greške, ispitati poruku greške u JOptionPane dijalogu.
 - Kada se pritisne dugme "Ispisi", ispisuje se izveštaj u editoru koji sadrži samo nazive ustanova koje su 2018. godine imali veći broj prijavljenih nego 2017. godine (poziva se odgovarajuća metoda atributa **organizacijaPrijemnog**). U slučaju da nema ustanova koje ispunjavaju ovaj uslov, ispisati poruku o tome u JOptionPane dijalogu.
 
 ![Slika1](../images/prijemni.jpg)
