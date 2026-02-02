@@ -1,6 +1,6 @@
 # Zadatak 1
 
-** NAPOMENA: PO ZAVRŠETKU ZADATKA OBAVEZNO TESTIRATI REŠENJE POZIVANJEM AUTOMATIZOVANIH TESTOVA (desnim tasterom na naziv projekta, Run as - Java Application - PokreniTestove)**
+**NAPOMENA: PO ZAVRŠETKU ZADATKA OBAVEZNO TESTIRATI REŠENJE POZIVANJEM AUTOMATIZOVANIH TESTOVA (desnim tasterom na naziv projekta, Run as - Java Application - PokreniTestove)**
 
 Napraviti javnu klasu **PrijemniException** u paketu **prijemni.izuzeci** kao neproveravani izuzetak i koja ima:
 - Javni **konstruktor** koji kao parametar prima poruku greške i poziva odgovarajući konstruktor nadklase prosleđujući mu parametar.
@@ -25,13 +25,13 @@ Napraviti vizuelnu klasu **PrijemniGUI**u paketu **prijemni.gui** koja izgleda k
 - Kada se pritisne dugme "Ucitaj", iz editora se preuzima tekst koji sadrži naziv fajla i poziva se odgovarajuća metoda atributa **organizacijaPrijemnog** kojom se deserijalizuju podaci o prijemnim ispitima. U slučaju greške, ispitati poruku greške u JOptionPane dijalogu.
 - Kada se pritisne dugme "Ispisi", ispisuje se izveštaj u editoru koji sadrži samo nazive ustanova koje su 2018. godine imali veći broj prijavljenih nego 2017. godine (poziva se odgovarajuća metoda atributa **organizacijaPrijemnog**). U slučaju da nema ustanova koje ispunjavaju ovaj uslov, ispisati poruku o tome u JOptionPane dijalogu.
 
-![Alt text](../images/prijemni.jpg?raw=true "Title")
-![Alt text](../images/prijemni-prosireno.jpg?raw=true "Title")
+![Slika1](../images/prijemni.jpg)
+![Slika2](../images/prijemni-prosireno.jpg)
 
 
 # Zadatak 2 (ispravka koda)
 
-** NAPOMENA: PO ZAVRŠETKU ZADATKA OBAVEZNO TESTIRATI REŠENJE POZIVANJEM AUTOMATIZOVANIH TESTOVA (desnim tasterom na naziv projekta, Run as - Java Application - PokreniTestove)**
+**NAPOMENA: PO ZAVRŠETKU ZADATKA OBAVEZNO TESTIRATI REŠENJE POZIVANJEM AUTOMATIZOVANIH TESTOVA (desnim tasterom na naziv projekta, Run as - Java Application - PokreniTestove)**
 
 U produžetku teksta je dat kod klase sa metodom koja bi trebalo da u tekstualni fajl "brojevi2.txt" upiše sve proste brojeve u rasponu od 1 do 100. Broj je prost ako je deljiv isključivo brojem 1 i sobom. Konkretno, u fajlu bi trebalo da se nađu brojevi: 1, 2, 3, 5, 7, 11, 13, 17, 19, ..... i 97.
 
